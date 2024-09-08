@@ -169,12 +169,36 @@ public:
         listSize = 0;
     }
 
-    // método sort/ordena la lista
+    // Método para ordenar la lista usando Merge Sort
     void sort() {
         if (!head || !head->next) return; // Lista vacía o con un solo elemento ya está ordenada
         head = mergeSort(head);
     }
 
+    // Ordena la lista usando el algoritmo Bubble Sort
+    /*
+    void sort(){
+        if(empty() || head->next == nullptr){
+            return;
+        }
+        
+        bool swapped;
+        do{
+            swapped = false;
+            Node<T>* current = head;
+            
+            while(current->next != nullptr){
+                if(current->data > current->next->data){
+                    // Intercambiar los valores
+                    swap(current->data, current->next->data);
+                    swapped = true;
+                }
+                current = current->next;
+            }
+        }while(swapped);
+    }
+    */
+    
     // método print/imprime la lista
     void print() const {
         Node<T>* current = head;
