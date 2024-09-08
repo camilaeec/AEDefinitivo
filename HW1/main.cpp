@@ -176,8 +176,8 @@ public:
     }
 
     // Ordena la lista usando el algoritmo Bubble Sort
-    /*
-    void sort(){
+    
+    void bubble_sort(){
         if(empty() || head->next == nullptr){
             return;
         }
@@ -197,7 +197,7 @@ public:
             }
         }while(swapped);
     }
-    */
+    
     
     // método print/imprime la lista
     void print() const {
@@ -209,31 +209,3 @@ public:
         std::cout << "nullptr" << std::endl;
     }
 };
-
-int main() {
-    forwardList<int> list;
-
-    list.push_back(3);
-    list.push_front(1);
-    list.push_back(4);
-    list.push_back(2);
-    list.print(); // Output: 1 -> 3 -> 4 -> 2 -> nullptr
-
-    list.sort();
-    list.print(); // Output: 1 -> 2 -> 3 -> 4 -> nullptr
-
-    std::cout << "Size: " << list.size() << std::endl; // Output: 4
-    std::cout << "Front: " << list.front() << std::endl; // Output: 1
-    std::cout << "Back: " << list.back() << std::endl; // Output: 4
-
-    list.pop_front();
-    list.print(); // Output: 2 -> 3 -> 4 -> nullptr
-
-    list.pop_back();
-    list.print(); // Output: 2 -> 3 -> nullptr
-
-    list.clear();
-    list.print(); // Output: nullptr
-
-    return 0;
-}
