@@ -1,14 +1,16 @@
 #include <iostream>
 
+template<typename T>
 struct Node {
-    int data;
+    T data;
     Node* next;
 };
 
+template<typename T>
 class Stack {
 private:
-    Node* top;
-    int count;
+    Node<T>* top;
+    int count;   
 
 public:
     Stack() : top(nullptr), count(0) {}
@@ -17,44 +19,44 @@ public:
         return top == nullptr;
     }
 
-    int getTop() const {
+    T getTop() const {
         if (isEmpty()) {
-            std::cout << "Stack is empty. No top element.\n";
-            return -1;
+            std::cout << "Empty stack";
+            return T(); 
         }
         return top->data;
     }
 
-    //inserts an element into the stack
-    void push(int value) {
-        Node* newNode = new Node();
+    //inserta un elemento en la pila
+    void push(T value) {
+        Node<T>* newNode = new Node<T>();
         newNode->data = value;
         newNode->next = top;
         top = newNode;
         count++;
     }
 
-    //removes the top element from the stack
+    //remueve el elemento superior de la pila
     void pop() {
         if (isEmpty()) {
             std::cout << "Stack is empty. Cannot pop.\n";
             return;
         }
-        Node *temp = top;
+        Node<T>* temp = top;
         top = top->next;
         delete temp;
         count--;
     }
 
-    //is full
+    //devuelve el tamaño de la pila
     int size() const {
         return count;
     }
 };
 
-//ejemplos de implementacion
+//ejemplos de implementación
 int main() {
-    Stack s;
+    Stack<int> s;
 
     s.push(10);
     s.push(20);
@@ -69,7 +71,13 @@ int main() {
 
     s.pop();
     s.pop();
-    s.pop();
+    s.pop(); // Intentar hacer pop en una pila vacía
+
+    // Ejemplo con una pila de cadenas
+    Stack<std::string> s2; // Pila de strings
+    s2.push("Hola");
+    s2.push("Mundo");
+    std::cout << "Top: " << s2.getTop() << std::endl;
 
     return 0;
 }
