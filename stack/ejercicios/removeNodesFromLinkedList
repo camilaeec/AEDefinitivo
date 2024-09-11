@@ -1,0 +1,139 @@
+#include <iostream>
+#include <stdexcept>
+#include <string>
+
+using namespace std;
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+// Stack implementation
+template<typename T>
+struct Node {
+    T data;
+    Node* next;
+};
+
+template<typename T>
+class Stack {
+private:
+    Node<T>* top;
+    int count;
+
+public:
+    Stack() : top(nullptr), count(0) {}
+
+    bool isEmpty() const {
+        return top == nullptr;
+    }
+
+    T getTop() const {
+        if (isEmpty()) {
+            cout << "Empty stack";
+            return T(); 
+        }
+        return top->data;
+    }
+
+    void push(T value) {
+        Node<T>* newNode = new Node<T>();
+        newNode->data = value;
+        newNode->next = top;
+        top = newNode;
+        count++;
+    }
+
+    void pop() {
+        if (isEmpty()) {
+            cout << "Stack is empty. Cannot pop.\n";
+            return;
+        }
+        Node<T>* temp = top;
+        top = top->next;
+        delete temp;
+        count--;
+    }
+
+    int size() const {
+        return count;
+    }
+
+    // Utility function to get the content of the stack as a string
+    string getStackContent() const {
+        string result;
+        Node<T>* current = top;
+        while (current != nullptr) {
+            result = to_string(current->data) + " " + result;  // Prepend each character to build the result
+            current = current->next;
+        }
+        return result;
+    }
+};
+
+// Solution class
+class Solution {
+public:
+    ListNode* removeNodes(ListNode* head) {
+        if (!head) return nullptr;
+
+        Stack<ListNode*> stack;
+        ListNode* curr = head;
+        
+        // Traverse the list to push nodes to the stack
+        while (curr) {
+            while (!stack.isEmpty() && stack.getTop()->val < curr->val) {
+                stack.pop();
+            }
+            stack.push(curr);
+            curr = curr->next;
+        }
+
+        // Create a new list from the stack
+        ListNode* newHead = nullptr;
+        ListNode* tail = nullptr;
+
+        while (!stack.isEmpty()) {
+            ListNode* node = stack.getTop();
+            stack.pop();
+            node->next = nullptr;
+            if (!newHead) {
+                newHead = node;
+                tail = node;
+            } else {
+                node->next = newHead;
+                newHead = node;
+            }
+        }
+
+        return newHead;
+    }
+};
+
+// Utility function to print the linked list
+void printList(ListNode* head) {
+    while (head) {
+        cout << head->val << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+// Test code
+int main() {
+    // Creating a test list: 5 -> 2 -> 13 -> 3 -> 8
+    ListNode* head = new ListNode(5, new ListNode(2, new ListNode(13, new ListNode(3, new ListNode(8)))));
+
+    Solution solution;
+    ListNode* result = solution.removeNodes(head);
+
+    cout << "Modified list: ";
+    printList(result);
+
+    return 0;
+}
