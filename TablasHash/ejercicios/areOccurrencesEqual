@@ -101,7 +101,6 @@ public:
     }
 };
 
-// Solución para LeetCode
 class Solution {
 public:
     bool areOccurrencesEqual(std::string s) {
