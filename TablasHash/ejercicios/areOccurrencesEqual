@@ -107,7 +107,6 @@ public:
     bool areOccurrencesEqual(std::string s) {
         HashTableOpenAddressing hashTable(26); //sin n con sombrero
         
-        //ocurrencias de cada carácter
         for (char c : s) {
             int* count = hashTable.search(c);
             if (count != nullptr) {
@@ -117,7 +116,7 @@ public:
             }
         }
 
-        // Verificar si todas las ocurrencias son iguales
+        //verificar si todas las ocurrencias son iguales
         int* firstCount = nullptr;
         for (char c : s) {
             int* count = hashTable.search(c);
