@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class HashTable {
+public:
+    int *table;
+    int size;
+
+    HashTable(int s) {
+        size = s;
+        table = new int[size];
+        reset();
+    }
+
+    void reset() {
+        for (int i = 0; i < size; ++i) {
+            table[i] = 0;
+        }
+    }
+
+    bool insert(int key) {
+        if (table[key] == 1) {
+            return false;  // Duplicado encontrado
+        }
+        table[key] = 1;
+        return true;
+    }
+
+    ~HashTable() {
+        delete[] table;
+    }
+};
+
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        HashTable rowHash(9), colHash(9), boxHash(9);
+
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                if (board[i][j] != '.') {
+                    int num = board[i][j] - '1';  // Convertir char a int (0-8)
+
+                    // Verificar la fila
+                    if (!rowHash.insert(num)) {
+                        return false;
+                    }
+                }
+            }
+            rowHash.reset();  // Reiniciar el hash para la siguiente fila
+        }
+
+        for (int j = 0; j < 9; ++j) {
+            for (int i = 0; i < 9; ++i) {
+                if (board[i][j] != '.') {
+                    int num = board[i][j] - '1';
+
+                    // Verificar la columna
+                    if (!colHash.insert(num)) {
+                        return false;
+                    }
+                }
+            }
+            colHash.reset();  // Reiniciar el hash para la siguiente columna
+        }
+
+        // Verificar las subcuadrículas 3x3
+        for (int block = 0; block < 9; ++block) {
+            for (int i = block / 3 * 3; i < block / 3 * 3 + 3; ++i) {
+                for (int j = block % 3 * 3; j < block % 3 * 3 + 3; ++j) {
+                    if (board[i][j] != '.') {
+                        int num = board[i][j] - '1';
+
+                        // Verificar la subcuadrícula
+                        if (!boxHash.insert(num)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            boxHash.reset();  // Reiniciar el hash para la siguiente subcuadrícula
+        }
+
+        return true;  // El tablero es válido
+    }
+};
