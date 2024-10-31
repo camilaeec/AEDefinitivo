@@ -162,12 +162,12 @@ int main() {
     tree.insert(7);
     tree.insert(17);
 
-    std::cout << "Árbol B+ tras inserciones: ";
+    std::cout << "Arbol B+ tras inserciones: ";
     tree.printTree();
 
     // Ejemplo de eliminación de una clave en hoja
     tree.remove(tree.root, 6);
-    std::cout << "Árbol B+ tras eliminar 6: ";
+    std::cout << "Arbol B+ tras eliminar 6: ";
     tree.printTree();
 
     // Búsqueda de clave
