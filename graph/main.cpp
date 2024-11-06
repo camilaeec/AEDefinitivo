@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <climits>
+#include <climits> //indica el valor máximo de un entero usando INT_MAX
 
 #define MAX_STACK_SIZE 100
 #define MAX_QUEUE_SIZE 100
@@ -91,24 +91,27 @@ public:
 ///////////////////////////////////////////CLASE GRAPH///////////////////////////////////////////
 class Graph {
 private:
-    std::vector<std::vector<int>> adj; // Matriz de adyacencia para almacenar el grafo con pesos
+    struct Node {
+        std::vector<std::pair<int, int>> adj; //lista adyacencia par (hijo, peso)
+    };
+
+    std::vector<Node> nodes; //vector de nodos
 
 public:
-    Graph(int nodes) : adj(nodes, std::vector<int>(nodes, INT_MAX)) {
-        for (int i = 0; i < nodes; ++i) {
-            adj[i][i] = 0;
-        }
+    //agrega nodo a grafo
+    void addNode() {
+        nodes.emplace_back(Node());
     }
 
-    // Agrega arista entre nodos a y b con peso
+    //agrega arista entre nodos a y b con peso
     void addEdge(int a, int b, int weight) {
-        adj[a][b] = weight;
+        nodes[a].adj.emplace_back(b, weight);
     }
 
-    // BFS para recorrer grafo desde nodo fuente
+    //breadth first search para recorrer grafo desde nodo fuente
     void BFS(int src) {
         Queue<int> q;
-        std::vector<bool> visited(adj.size(), false);
+        std::vector<bool> visited(nodes.size(), false);
 
         q.enqueue(src);
         visited[src] = true;
@@ -117,19 +120,20 @@ public:
             int node = q.dequeue();
             std::cout << node << " ";
 
-            for (int i = 0; i < adj[node].size(); ++i) {
-                if (adj[node][i] != INT_MAX && !visited[i]) {
-                    q.enqueue(i);
-                    visited[i] = true;
+            //recorre cada hijo del nodo actual
+            for (const auto& child : nodes[node].adj) {
+                if (!visited[child.first]) {
+                    q.enqueue(child.first);
+                    visited[child.first] = true;
                 }
             }
         }
     }
 
-    // DFS para recorrer el grafo desde un nodo fuente
+    //depth first search para recorrer el grafo desde un nodo fuente
     void DFS(int src) {
         Stack<int> s;
-        std::vector<bool> visited(adj.size(), false);
+        std::vector<bool> visited(nodes.size(), false);
 
         s.push(src);
         while (!s.isEmpty()) {
@@ -139,18 +143,19 @@ public:
                 std::cout << node << " ";
                 visited[node] = true;
 
-                for (int i = adj[node].size() - 1; i >= 0; --i) {
-                    if (adj[node][i] != INT_MAX && !visited[i]) {
-                        s.push(i);
+                //recorre cada hijo del nodo actual en orden inverso
+                for (auto it = nodes[node].adj.rbegin(); it != nodes[node].adj.rend(); ++it) {
+                    if (!visited[it->first]) {
+                        s.push(it->first);
                     }
                 }
             }
         }
     }
 
-    // Algoritmo Dijkstra para camino más corto desde un nodo fuente
+    //algoritmo dijkstra camino mas corto desde nodo fuente
     std::vector<int> dijkstra(int src) {
-        int n = adj.size();
+        int n = nodes.size();
         std::vector<int> dist(n, INT_MAX);
         std::vector<bool> sptSet(n, false);
 
@@ -166,9 +171,9 @@ public:
 
             sptSet[u] = true;
 
-            for (int v = 0; v < n; ++v) {
-                if (adj[u][v] != INT_MAX && dist[u] != INT_MAX && dist[u] + adj[u][v] < dist[v]) {
-                    dist[v] = dist[u] + adj[u][v];
+            for (const auto& [v, weight] : nodes[u].adj) {
+                if (dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
                 }
             }
         }
@@ -177,7 +182,10 @@ public:
 };
 
 int main() {
-    Graph g(3);
+    Graph g;
+    g.addNode();
+    g.addNode();
+    g.addNode();
     g.addEdge(0, 1, 4);
     g.addEdge(1, 2, 8);
     g.addEdge(0, 2, 10);
