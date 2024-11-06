@@ -148,35 +148,6 @@ public:
         }
     }
 
-    // Verifica si el grafo es bipartito
-    bool isBipartite() {
-        std::vector<int> color(adj.size(), -1);
-
-        for (int i = 0; i < adj.size(); ++i) {
-            if (color[i] == -1) {
-                Queue<int> q;
-                q.enqueue(i);
-                color[i] = 0;
-
-                while (!q.isEmpty()) {
-                    int u = q.dequeue();
-
-                    for (int v = 0; v < adj[u].size(); ++v) {
-                        if (adj[u][v] != INT_MAX) {
-                            if (color[v] == -1) {
-                                color[v] = 1 - color[u];
-                                q.enqueue(v);
-                            } else if (color[v] == color[u]) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
     // Algoritmo Dijkstra para camino más corto desde un nodo fuente
     std::vector<int> dijkstra(int src) {
         int n = adj.size();
@@ -216,8 +187,6 @@ int main() {
 
     std::cout << "\nDFS starting from node 0:\n";
     g.DFS(0);
-
-    std::cout << "\n\nIs the graph bipartite? " << (g.isBipartite() ? "Yes" : "No") << "\n";
 
     std::cout << "\nShortest paths from node 0 using Dijkstra:\n";
     auto dist = g.dijkstra(0);
